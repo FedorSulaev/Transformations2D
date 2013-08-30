@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transformations2D", "Transformations2D\Transformations2D.csproj", "{C2B50245-DFB4-4454-B869-44BE0921B9F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transformations2D.UnitTests", "Transformations2D.UnitTests\Transformations2D.UnitTests.csproj", "{8311F3F5-7521-4781-9A91-9CB28ED31AEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transformations2D.WPF", "Transformations2D.WPF\Transformations2D.WPF.csproj", "{86B5EF95-A625-4BCA-A109-82A52F78909A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{97CE84E8-A20A-4683-AA3A-56088FB2C78D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transformations2D.WPF.UnitTests", "Transformations2D.WPF.UnitTests\Transformations2D.WPF.UnitTests.csproj", "{88541B02-54F2-41B4-80E8-6EF06E50D91F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transformations2D.TestsUtility", "Transformations2D.TestsUtility\Transformations2D.TestsUtility.csproj", "{E0214A53-8D6D-433A-97D7-BB8457C48532}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2B50245-DFB4-4454-B869-44BE0921B9F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B50245-DFB4-4454-B869-44BE0921B9F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B50245-DFB4-4454-B869-44BE0921B9F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B50245-DFB4-4454-B869-44BE0921B9F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8311F3F5-7521-4781-9A91-9CB28ED31AEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8311F3F5-7521-4781-9A91-9CB28ED31AEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8311F3F5-7521-4781-9A91-9CB28ED31AEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8311F3F5-7521-4781-9A91-9CB28ED31AEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86B5EF95-A625-4BCA-A109-82A52F78909A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86B5EF95-A625-4BCA-A109-82A52F78909A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86B5EF95-A625-4BCA-A109-82A52F78909A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86B5EF95-A625-4BCA-A109-82A52F78909A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88541B02-54F2-41B4-80E8-6EF06E50D91F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88541B02-54F2-41B4-80E8-6EF06E50D91F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88541B02-54F2-41B4-80E8-6EF06E50D91F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88541B02-54F2-41B4-80E8-6EF06E50D91F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0214A53-8D6D-433A-97D7-BB8457C48532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0214A53-8D6D-433A-97D7-BB8457C48532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0214A53-8D6D-433A-97D7-BB8457C48532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0214A53-8D6D-433A-97D7-BB8457C48532}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8311F3F5-7521-4781-9A91-9CB28ED31AEA} = {97CE84E8-A20A-4683-AA3A-56088FB2C78D}
+		{88541B02-54F2-41B4-80E8-6EF06E50D91F} = {97CE84E8-A20A-4683-AA3A-56088FB2C78D}
+		{E0214A53-8D6D-433A-97D7-BB8457C48532} = {97CE84E8-A20A-4683-AA3A-56088FB2C78D}
+	EndGlobalSection
+EndGlobal
