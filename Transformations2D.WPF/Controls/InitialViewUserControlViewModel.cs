@@ -9,6 +9,7 @@ using System.Windows.Shapes;
 using Microsoft.Practices.Prism.Commands;
 using Transformations2D.WPF.Helpers;
 using Transformations2D.WPF.Resourses.MVVM;
+using Transformations2D.WPF.Utility;
 
 namespace Transformations2D.WPF.Controls
 {
@@ -88,8 +89,8 @@ namespace Transformations2D.WPF.Controls
 
 		public InitialViewUserControlViewModel()
 		{
-			_userInputParser = new UserInputParser();
-			_geometryHelper = new GeometryHelperService();
+			_userInputParser = DependencyFactory.Resolve<IUserInputParser>();
+			_geometryHelper = DependencyFactory.Resolve<IGeometryHelper>();
 			_listOfPoints = new ObservableCollection<Point>();
 			_initialViewItems = new ObservableCollection<Path>();
 		}

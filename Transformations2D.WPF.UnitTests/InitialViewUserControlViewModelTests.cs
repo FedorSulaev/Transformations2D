@@ -55,7 +55,6 @@ namespace Transformations2D.WPF.UnitTests
 
 			Assert.AreEqual(0, viewModel.ListOfPoints.Count);
 		}
-
 		[Test]
 		public void NewPointCoordinates_CoordinatesCleared_NotifyPropertyChangedRaised()
 		{
