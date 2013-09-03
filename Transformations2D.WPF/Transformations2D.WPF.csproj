@@ -96,6 +96,8 @@
     <Compile Include="Helpers\IUserInputParser.cs" />
     <Compile Include="Resourses\MVVM\PropertyChangedImplementation.cs" />
     <Compile Include="Helpers\UserInputParser.cs" />
+    <Compile Include="Utility\GenericEvent.cs" />
+    <Compile Include="Utility\ServicesFactory.cs" />
     <Page Include="Controls\InitialViewUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

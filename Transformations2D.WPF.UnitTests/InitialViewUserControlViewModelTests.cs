@@ -1,4 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -8,16 +11,32 @@ using NUnit.Framework;
 using Transformations2D.TestsUtility;
 using Transformations2D.WPF.Controls;
 using Transformations2D.WPF.Helpers;
+using Transformations2D.WPF.Utility;
 
 namespace Transformations2D.WPF.UnitTests
 {
 	[TestFixture]
 	class InitialViewUserControlViewModelTests
 	{
+		private static InitialViewUserControlViewModel MakeInitialViewUserControlViewModel(IUserInputParser parser = null, IGeometryHelper geometryHelper = null)
+		{
+			InitialViewUserControlViewModel viewModel = new InitialViewUserControlViewModel();
+			viewModel.UserInputParser = parser ?? new Mock<IUserInputParser>().Object;
+			viewModel.GeometryHelper = geometryHelper ?? new Mock<IGeometryHelper>().Object;
+			return viewModel;
+		}
+
+		private static Mock<IUserInputParser> MakeFakeIUserInputParser(Point? parseTo)
+		{
+			Mock<IUserInputParser> parser = new Mock<IUserInputParser>();
+			parser.Setup(p => p.StringToPoint(null)).Returns(parseTo);
+			return parser;
+		}
+
 		[Test]
 		public void ListOfPoints_InitialViewUserControlViewModelCreated_ListIsEmpty()
 		{
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel();
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
 
 			Assert.AreEqual(0, viewModel.ListOfPoints.Count);
 		}
@@ -25,8 +44,8 @@ namespace Transformations2D.WPF.UnitTests
 		[Test]
 		public void AddPointCommand_NewPointCoordinatesIsValidString_AddPointToListOfPoints()
 		{
-			Mock<IUserInputParser> fakeUserInputParser = Maker.MakeFakeIUserInputParser(parseTo: new Point(1, 2));
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(parser: fakeUserInputParser.Object);
+			Mock<IUserInputParser> fakeUserInputParser = MakeFakeIUserInputParser(parseTo: new Point(1, 2));
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel(parser: fakeUserInputParser.Object);
 
 			viewModel.AddPointCommand.Execute(null);
 
@@ -37,19 +56,19 @@ namespace Transformations2D.WPF.UnitTests
 		public void AddPointCommand_NewPointCoordinatesIsValidString_ClearNewPointCoordinates()
 		{
 
-			Mock<IUserInputParser> fakeUserInputParser = Maker.MakeFakeIUserInputParser(parseTo: new Point(1, 2));
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(parser: fakeUserInputParser.Object);
+			Mock<IUserInputParser> fakeUserInputParser = MakeFakeIUserInputParser(parseTo: new Point(1, 2));
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel(parser: fakeUserInputParser.Object);
 
 			viewModel.AddPointCommand.Execute(null);
 
-			Assert.AreEqual(string.Empty, viewModel.NewPointCoordinates);
+			Assert.AreEqual(String.Empty, viewModel.NewPointCoordinates);
 		}
 
 		[Test]
 		public void AddPointCommand_NewPointCoordinatesIsInvalid_DoNotAddAnythingToListOfPoints()
 		{
-			Mock<IUserInputParser> fakeUserInputParser = Maker.MakeFakeIUserInputParser(parseTo: null);
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(parser: fakeUserInputParser.Object);
+			Mock<IUserInputParser> fakeUserInputParser = MakeFakeIUserInputParser(parseTo: null);
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel(parser: fakeUserInputParser.Object);
 
 			viewModel.AddPointCommand.Execute(null);
 
@@ -58,17 +77,17 @@ namespace Transformations2D.WPF.UnitTests
 		[Test]
 		public void NewPointCoordinates_CoordinatesCleared_NotifyPropertyChangedRaised()
 		{
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel();
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
 
 			viewModel.NewPointCoordinates = "1,2";
 
-			viewModel.ShouldNotifyOn(vm => vm.NewPointCoordinates).When(vm => vm.NewPointCoordinates = string.Empty);
+			viewModel.ShouldNotifyOn(vm => vm.NewPointCoordinates).When(vm => vm.NewPointCoordinates = String.Empty);
 		}
 
 		[Test]
 		public void DeleteAllPointsCommand_ListOfPointsContains2Points_DeleteAllPointsFromListOfPoints()
 		{
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel();
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
 			viewModel.ListOfPoints.Add(new Point(1, 2));
 			viewModel.ListOfPoints.Add(new Point(3, 4));
 
@@ -80,19 +99,18 @@ namespace Transformations2D.WPF.UnitTests
 		[Test]
 		public void DeleteAllPointsCommand_InitialViewItemsContains2Points_ClearInitialViewItems()
 		{
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel();
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(new Point()));
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(new Point(1,1)));
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
+			viewModel.InitialViewItems.Add(new Path());
 
 			viewModel.DeleteAllPointsCommand.Execute(null);
 
-			Assert.IsEmpty(viewModel.InitialViewItems);
+			Assert.IsNull(viewModel.InitialViewItems[0]);
 		}
 
 		[Test]
 		public void DeleteAllPointsCommand_ListOfPointsIsEmpty_CanNotExecuteCommand()
 		{
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel();
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
 
 			Assert.IsFalse(viewModel.DeleteAllPointsCommand.CanExecute(null));
 		}
@@ -100,7 +118,7 @@ namespace Transformations2D.WPF.UnitTests
 		[Test]
 		public void DeleteAllPointsCommand_ListOfPointsContainsPoint_CanExecuteCommand()
 		{
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel();
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
 			viewModel.ListOfPoints.Add(new Point());
 
 			Assert.IsTrue(viewModel.DeleteAllPointsCommand.CanExecute(null));
@@ -109,8 +127,8 @@ namespace Transformations2D.WPF.UnitTests
 		[Test]
 		public void DeleteAllPointsCommand_AddPointExecuted_CanExecuteChangedRaised()
 		{
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(parser: fakeParser.Object);
+			Mock<IUserInputParser> fakeParser = MakeFakeIUserInputParser(parseTo: new Point());
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel(parser: fakeParser.Object);
 			bool canExecuteChangedWasRaised = false;
 			viewModel.DeleteAllPointsCommand.CanExecuteChanged += (o, e) => canExecuteChangedWasRaised = true;
 			
@@ -122,7 +140,7 @@ namespace Transformations2D.WPF.UnitTests
 		[Test]
 		public void DeleteAllPointsCommand_DeleteAllPointsExecuted_CanExecuteChangedRaised()
 		{
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel();
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
 			bool canExecuteChangedWasRaised = false;
 			viewModel.DeleteAllPointsCommand.CanExecuteChanged += (o, e) => canExecuteChangedWasRaised = true;
 
@@ -134,8 +152,8 @@ namespace Transformations2D.WPF.UnitTests
 		[Test]
 		public void AddPointCommand_AddPointExecutedPointWithTheSameCoordinatesExistInTheList_DoNotAddNewPoint()
 		{
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point(0, 0));
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(parser: fakeParser.Object);
+			Mock<IUserInputParser> fakeParser = MakeFakeIUserInputParser(parseTo: new Point(0, 0));
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel(parser: fakeParser.Object);
 			viewModel.ListOfPoints.Add(new Point(0, 0));
 
 			viewModel.AddPointCommand.Execute(null);
@@ -143,167 +161,107 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.AreEqual(1, viewModel.ListOfPoints.Count);
 		}
 
-		[TestCase("175,175", "175,175")]
-		[TestCase("50,50", "50,50")]
-		public void AddPointCommand_NewPointAdded_AddNewEllipseGeometryWithConvertedCoordinatesToInitialViewItems(string convertedCoordinates, string expected)
-		{
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: Point.Parse(convertedCoordinates));
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object, fakeGeometryHelper.Object);
-
-			viewModel.AddPointCommand.Execute(null);
-
-			Assert.IsTrue(((EllipseGeometry)viewModel.InitialViewItems[0].Data).Center == Point.Parse(expected));
-		}
-
 		[TestCase("11,11")]
 		[TestCase("1,11")]
 		[TestCase("-11,-11")]
 		public void AddPointCommand_PointWithCoordinatesOutOfBounds_DoNotAddPoint(string coordinates)
 		{
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: Point.Parse(coordinates));
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object);
+			Mock<IUserInputParser> fakeParser = MakeFakeIUserInputParser(parseTo: Point.Parse(coordinates));
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel(parser: fakeParser.Object);
 
 			viewModel.AddPointCommand.Execute(null);
 
 			Assert.IsEmpty(viewModel.ListOfPoints);
 		}
 
-		[TestCase("175,175", "175,175")]
-		[TestCase("1,1", "1,1")]
-		public void AddPointCommand_SecondPointAdded_AddLineWithBeginnigAtFirstPointIntoInitialViewItems(string firstPointCoordinates, string expected)
+		[Test]
+		public void AddPointCommand_ListOfPointsContains1Point_AddCorrectPathToInitialViewItems()
 		{
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: new Point());
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object, fakeGeometryHelper.Object);
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(Point.Parse(firstPointCoordinates)));
+			Mock<IUserInputParser> fakeParser = MakeFakeIUserInputParser(parseTo: new Point(0, 0));
+			Mock<IGeometryHelper> fakeGeometryHelper = new Mock<IGeometryHelper>();
+			fakeGeometryHelper.Setup(gh => gh.ConvertIntoCanvasCoordinates(It.IsAny<List<Point>>(), It.IsAny<int>()))
+				.Returns(new List<Point> {new Point(175, 175)});
+			fakeGeometryHelper.Setup(gh => gh.MakePath(It.IsAny<List<Point>>())).Returns(new Path
+			{
+				Data = new GeometryGroup
+				{
+					Children = new GeometryCollection {new EllipseGeometry(new Point(175, 175), 3, 3)}
+				}
+			});
+			InitialViewUserControlViewModel viewModel = 
+				MakeInitialViewUserControlViewModel(parser: fakeParser.Object, geometryHelper: fakeGeometryHelper.Object);
 
 			viewModel.AddPointCommand.Execute(null);
 
-			Assert.AreEqual(Point.Parse(expected),
-				((LineGeometry) viewModel.InitialViewItems.First(path => path.Data is LineGeometry).Data).StartPoint);
+			Assert.AreEqual(new Point(175, 175), 
+				((EllipseGeometry)((GeometryGroup)viewModel.InitialViewItems[0].Data).Children.First(g => g is EllipseGeometry)).Center);
+		}
+
+		[TestCase("1,1")]
+		[TestCase("3,3")]
+		public void DeletePointCommand_OneOfTwoPointsSelected_DeleteSelectedPoint(string point)
+		{
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
+			Point selectedPoint = Point.Parse(point);
+			viewModel.ListOfPoints.Add(selectedPoint);
+			viewModel.ListOfPoints.Add(new Point(2,2));
+			viewModel.SelectedPoint = selectedPoint;
+
+			viewModel.DeletePointCommand.Execute(null);
+
+			Assert.IsFalse(viewModel.ListOfPoints.Contains(selectedPoint));
 		}
 
 		[Test]
-		public void AddPointCommand_SecondPointAdded_AddLineWithEndAtSecondPointIntoInitialViewItems()
+		public void DeletePointCommand_SelectedPointIsNull_CanNotExecute()
 		{
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: new Point(100, 100));
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object, fakeGeometryHelper.Object);
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(new Point()));
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
+			viewModel.ListOfPoints.Add(new Point());
+			viewModel.SelectedPoint = null;
 
-			viewModel.AddPointCommand.Execute(null);
-
-			Assert.AreEqual(new Point(100, 100),
-				((LineGeometry) viewModel.InitialViewItems.First(path => path.Data is LineGeometry).Data).EndPoint);
+			Assert.IsFalse(viewModel.DeletePointCommand.CanExecute(null));
 		}
 
 		[Test]
-		public void AddPointCommand_FirstPointAdded_DoNotAddLine()
+		public void DeletePointCommand_PointSelected_RaiseCanExecuteChanged()
 		{
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: new Point());
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object, fakeGeometryHelper.Object);
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
+			bool canExecuteChangedWasRaised = false;
+			viewModel.DeletePointCommand.CanExecuteChanged += (o, e) => canExecuteChangedWasRaised = true;
 
-			viewModel.AddPointCommand.Execute(null);
+			viewModel.SelectedPoint = new Point();
 
-			Assert.IsFalse(viewModel.InitialViewItems.Any(path => path.Data is LineGeometry));
+			Assert.IsTrue(canExecuteChangedWasRaised);
 		}
 
 		[Test]
-		public void AddPointCommand_ThirdPointAdded_AddLineWithBeginningAtSecondPointIntoInitialViewItems()
+		public void DeleteAllPointsCommand_PointDeleted_RaiseCanExecuteChanged()
 		{
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: new Point());
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object, fakeGeometryHelper.Object);
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(new Point()));
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(new Point(100,100)));
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
+			bool canExecuteChangedWasRaised = false;
+			viewModel.DeleteAllPointsCommand.CanExecuteChanged += (o, e) => canExecuteChangedWasRaised = true;
+			viewModel.ListOfPoints.Add(new Point());
+			viewModel.SelectedPoint = new Point();
 
-			viewModel.AddPointCommand.Execute(null);
+			viewModel.DeletePointCommand.Execute(null);
 
-			Assert.AreEqual(new Point(100, 100),
-				((LineGeometry) viewModel.InitialViewItems.First(path => path.Data is LineGeometry).Data).StartPoint);
+			Assert.IsTrue(canExecuteChangedWasRaised);
 		}
 
 		[Test]
-		public void AddPointCommand_ThirdPointAdded_AddLineBetweenFirstAndThirdPoints()
+		public void ListOfPoints_CollectionChanged_RaisePointsChangedEventWithListOfPointsAsParameter()
 		{
-			Point firstPoint = new Point(10, 10);
-			Point secondPoint = new Point(20, 20);
-			Point thirdPoint = new Point(30, 30);
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: thirdPoint);
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object,
-				fakeGeometryHelper.Object);
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(firstPoint));
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(secondPoint));
+			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
+			List<Point> points = new List<Point>();
+			ServicesFactory.EventService.GetEvent<GenericEvent<List<Point>>>().Subscribe(
+				s =>
+				{
+					points = s.Value;
+				});
 
-			viewModel.AddPointCommand.Execute(null);
+			viewModel.ListOfPoints.Add(new Point());
 
-			Assert.IsTrue(viewModel.InitialViewItems.Any(path => path.Data is LineGeometry && ((LineGeometry)path.Data).StartPoint == firstPoint &&
-				((LineGeometry)path.Data).EndPoint == thirdPoint));
-		}
-
-		[Test]
-		public void AddPointCommand_SecondPointAdded_OnlyOneLineAdded()
-		{
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: new Point(10,10));
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object,
-				fakeGeometryHelper.Object);
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(new Point()));
-
-			viewModel.AddPointCommand.Execute(null);
-
-			Assert.AreEqual(1, viewModel.InitialViewItems.Count(item => item.Data is LineGeometry));
-		}
-
-		[Test]
-		public void AddPointCommand_FourthPointAdded_DeleteLineBetweenFirstAndThirdPoints()
-		{
-			Point firstPoint = new Point(10, 10);
-			Point secondPoint = new Point(20, 20);
-			Point thirdPoint = new Point(30, 30);
-			Point fourthPoint = new Point(40, 40);
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: fourthPoint);
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object,
-				fakeGeometryHelper.Object);
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(firstPoint));
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(secondPoint));
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(thirdPoint));
-			viewModel.InitialViewItems.Add(Maker.MakeLinePath(firstPoint, secondPoint));
-			viewModel.InitialViewItems.Add(Maker.MakeLinePath(secondPoint, thirdPoint));
-			viewModel.InitialViewItems.Add(Maker.MakeLinePath(firstPoint, thirdPoint));
-
-			viewModel.AddPointCommand.Execute(null);
-
-			Assert.IsFalse(
-				viewModel.InitialViewItems.Any(
-					item => item.Data is LineGeometry && ((LineGeometry) item.Data).StartPoint == firstPoint &&
-					        ((LineGeometry) item.Data).EndPoint == thirdPoint));
-		}
-
-		[Test]
-		public void AddPointCommand_ThirdPointAdded_DoNotDeleteLineBetweenFirstAndSecondPoints()
-		{
-			Point firstPoint = new Point(10, 10);
-			Point secondPoint = new Point(20, 20);
-			Point thirdPoint = new Point(30, 30);
-			Mock<IUserInputParser> fakeParser = Maker.MakeFakeIUserInputParser(parseTo: new Point());
-			Mock<IGeometryHelper> fakeGeometryHelper = Maker.MakeFakeIGeometryHelper(convertTo: thirdPoint);
-			InitialViewUserControlViewModel viewModel = Maker.MakeInitialViewUserControlViewModel(fakeParser.Object,
-				fakeGeometryHelper.Object);
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(firstPoint));
-			viewModel.InitialViewItems.Add(Maker.MakePointPath(secondPoint));
-			viewModel.InitialViewItems.Add(Maker.MakeLinePath(firstPoint, secondPoint));
-
-			viewModel.AddPointCommand.Execute(null);
-
-			Assert.IsTrue(
-				viewModel.InitialViewItems.Any(
-					item => item.Data is LineGeometry && ((LineGeometry)item.Data).StartPoint == firstPoint &&
-							((LineGeometry)item.Data).EndPoint == secondPoint));
+			Assert.AreEqual(viewModel.ListOfPoints, points);
 		}
 	}
 }

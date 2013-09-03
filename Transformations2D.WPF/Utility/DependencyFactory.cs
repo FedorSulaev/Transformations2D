@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
+using Transformations2D.WPF.Helpers;
 
 namespace Transformations2D.WPF.Utility
 {

@@ -6,6 +6,28 @@
         Title="MainWindow"
         Height="700"
         Width="790">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin"
+                    Value="2"/>
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Margin"
+                    Value="2"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin"
+                    Value="2" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="2" />
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin"
+                    Value="2" />
+        </Style>
+    </Window.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Auto">
         <Grid>

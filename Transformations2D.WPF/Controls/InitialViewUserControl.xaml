@@ -100,31 +100,30 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="X Y: "
-                               Margin="2"
                                Grid.Column="0" />
 
                     <TextBox Grid.Column="1"
-                             Margin="2"
                              Text="{Binding NewPointCoordinates, Mode=TwoWay}" />
 
                 </Grid>
 
                 <ListBox Grid.Column="0"
                          Grid.Row="1"
-                         Margin="2"
                          ItemsSource="{Binding ListOfPoints}"
                          SelectedItem="{Binding SelectedPoint, Mode=TwoWay}" />
 
                 <Button Grid.Row="0"
                         Grid.Column="1"
-                        Margin="2"
                         Content="Добавить точку"
                         Command="{Binding AddPointCommand}" />
 
                 <StackPanel Grid.Row="1"
                             Grid.Column="1">
-                    <Button Margin="2"
-                            Content="Очистить"
+                    
+                    <Button Content="Удалить точку"
+                            Command="{Binding DeletePointCommand}"/>
+
+                    <Button Content="Очистить"
                             Command="{Binding DeleteAllPointsCommand}" />
                 </StackPanel>
 

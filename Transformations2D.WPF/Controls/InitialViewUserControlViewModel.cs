@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -31,6 +33,14 @@ namespace Transformations2D.WPF.Controls
 			}
 		}
 
+		public ICommand DeletePointCommand
+		{
+			get
+			{
+				return _deletePointCommand ?? (_deletePointCommand = new DelegateCommand<object>(a => DeleteSelectedPoint(), a => CanDeleteSelectedPoint()));
+			}
+		}
+
 		public ObservableCollection<Point> ListOfPoints
 		{
 			get { return _listOfPoints; }
@@ -43,6 +53,7 @@ namespace Transformations2D.WPF.Controls
 			set
 			{
 				_selectedPoint = value;
+				((DelegateCommand<object>)DeletePointCommand).RaiseCanExecuteChanged();
 			}
 		}
 
@@ -72,8 +83,8 @@ namespace Transformations2D.WPF.Controls
 		}
 
 		private ICommand _addPointCommand;
-
 		private ICommand _deleteAllPointsCommand;
+		private ICommand _deletePointCommand;
 
 		private ObservableCollection<Path> _initialViewItems;
 		private ObservableCollection<Point> _listOfPoints;
@@ -93,6 +104,15 @@ namespace Transformations2D.WPF.Controls
 			_geometryHelper = DependencyFactory.Resolve<IGeometryHelper>();
 			_listOfPoints = new ObservableCollection<Point>();
 			_initialViewItems = new ObservableCollection<Path>();
+			_listOfPoints.CollectionChanged += ListOfPoints_CollectionChanged;
+		}
+
+		void ListOfPoints_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+		{
+			DrawFigure();
+			((DelegateCommand<object>)DeleteAllPointsCommand).RaiseCanExecuteChanged();
+			ServicesFactory.EventService.GetEvent<GenericEvent<List<Point>>>()
+				.Publish(new EventParameters<List<Point>>("PointsChangedEvent", _listOfPoints.ToList()));
 		}
 
 		private void AddPoint()
@@ -100,18 +120,14 @@ namespace Transformations2D.WPF.Controls
 			Point? point = _userInputParser.StringToPoint(_newPointCoordinates);
 			if (!IsUserPointOk(point)) return;
 			_listOfPoints.Add((Point)point);
-			Point canvasCoordinates = _geometryHelper.ConvertIntoCanvasCoordinates((Point)point, CanvasSideLength);
-			RemovePreviousClosingLine();
-			AddLines(canvasCoordinates);
-			AddPointToInitialView(canvasCoordinates);
 			NewPointCoordinates = string.Empty;
-			((DelegateCommand<object>)DeleteAllPointsCommand).RaiseCanExecuteChanged();
 		}
 
-		private void RemovePreviousClosingLine()
+		private void DrawFigure()
 		{
-			if(_initialViewItems.Count > 3)
-				_initialViewItems.Remove(_initialViewItems.LastOrDefault(item => item.Data is LineGeometry));
+			List<Point> convertedPoints = _geometryHelper.ConvertIntoCanvasCoordinates(ListOfPoints.ToList(), CanvasSideLength);
+			InitialViewItems.Clear();
+			InitialViewItems.Add(_geometryHelper.MakePath(convertedPoints));
 		}
 
 		private bool IsUserPointOk(Point? point)
@@ -121,35 +137,6 @@ namespace Transformations2D.WPF.Controls
 			if (IsPointInTheList((Point) point) || IsPointOutOfBounds((Point) point))
 				return false;
 			return true;
-		}
-
-		private void AddLines(Point canvasCoordinates)
-		{
-			if (_initialViewItems.Count > 0)
-				AddLineToInitialView(((EllipseGeometry) _initialViewItems.Last(path => path.Data is EllipseGeometry).Data).Center,
-					canvasCoordinates);
-			if(_initialViewItems.Count > 2)
-				AddLineToInitialView(((EllipseGeometry)_initialViewItems.First(path => path.Data is EllipseGeometry).Data).Center, 
-					canvasCoordinates);
-		}
-
-		private void AddLineToInitialView(Point startPoint, Point endPoint)
-		{
-			_initialViewItems.Add(new Path
-			{
-				Data = new LineGeometry(startPoint, endPoint),
-				StrokeThickness = 2,
-				Stroke = Brushes.Black
-			});
-		}
-
-		private void AddPointToInitialView(Point point)
-		{
-			_initialViewItems.Add(new Path
-			{
-				Data = new EllipseGeometry(point, 3, 3),
-				Fill = Brushes.Black,
-			});
 		}
 
 		private bool IsPointOutOfBounds(Point point)
@@ -165,13 +152,21 @@ namespace Transformations2D.WPF.Controls
 		private void DeleteAllPoints()
 		{
 			ListOfPoints.Clear();
-			InitialViewItems.Clear();
-			((DelegateCommand<object>)DeleteAllPointsCommand).RaiseCanExecuteChanged();
 		}
 
 		private bool CanDeleteAllPoints()
 		{
 			return ListOfPoints.Count > 0;
+		}
+
+		private void DeleteSelectedPoint()
+		{
+			ListOfPoints.Remove((Point)_selectedPoint);
+		}
+
+		private bool CanDeleteSelectedPoint()
+		{
+			return SelectedPoint != null;
 		}
 	}
 }
