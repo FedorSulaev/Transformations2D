@@ -47,12 +47,20 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Transformations\ITransformation2D.cs" />
+    <Compile Include="Transformations\ScalingTransformation2D.cs" />
+    <Compile Include="Transformations\TranslationTransformation2D.cs" />
+    <Compile Include="Transformations\XReflectionTransformation2D.cs" />
+    <Compile Include="Transformations\YReflectionTransformation2D.cs" />
     <Compile Include="TransformationTypes\ITransformation2DType.cs" />
+    <Compile Include="Transformations\RotationTransformation2D.cs" />
     <Compile Include="TransformationTypes\RotationTransformation2DType.cs" />
     <Compile Include="Transform2DService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransformationTypes\ScalingTransformation2DType.cs" />
+    <Compile Include="TransformationTypes\TranslationTransformation2DType.cs" />
     <Compile Include="TransformationTypes\XReflectionTransformation2DType.cs" />
+    <Compile Include="TransformationTypes\YReflectionTransformation2DType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

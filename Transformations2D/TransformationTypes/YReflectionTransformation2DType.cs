@@ -7,11 +7,11 @@ using Transformations2D.Transformations;
 
 namespace Transformations2D.TransformationTypes
 {
-	public class XReflectionTransformation2DType : ITransformation2DType
+	public class YReflectionTransformation2DType : ITransformation2DType
 	{
 		public string Name
 		{
-			get { return "Отражение по X"; }
+			get { return "Отражение по Y"; }
 		}
 
 		public int NumberOfParameters
@@ -26,7 +26,7 @@ namespace Transformations2D.TransformationTypes
 
 		public ITransformation2D GetTransformation(double[] parameters)
 		{
-			return new XReflectionTransformation2D();
+			return new YReflectionTransformation2D();
 		}
 	}
 }

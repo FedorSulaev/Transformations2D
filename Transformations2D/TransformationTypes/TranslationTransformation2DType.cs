@@ -7,11 +7,11 @@ using Transformations2D.Transformations;
 
 namespace Transformations2D.TransformationTypes
 {
-	public class ScalingTransformation2DType : ITransformation2DType
+	public class TranslationTransformation2DType : ITransformation2DType
 	{
 		public string Name
 		{
-			get { return "Растяжение"; }
+			get { return "Перенос"; }
 		}
 
 		public int NumberOfParameters
@@ -21,12 +21,12 @@ namespace Transformations2D.TransformationTypes
 
 		public string ParameterNames
 		{
-			get { return "Коэффициент X, Коэффициент Y"; }
+			get { return "Смещение по X, Смещение по Y"; }
 		}
 
 		public ITransformation2D GetTransformation(double[] parameters)
 		{
-			return new ScalingTransformation2D(parameters[0], parameters[1]);
+			return new TranslationTransformation2D(parameters[0], parameters[1]);
 		}
 	}
 }

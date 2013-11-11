@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Transformations2D.Transformations;
 using Transformations2D.TransformationTypes;
 
-namespace Transformations2D.UnitTests
+namespace Transformations2D.UnitTests.TransformationTypesTests
 {
 	[TestFixture]
 	public class ScalingTransformation2DTypeTests
@@ -46,6 +42,14 @@ namespace Transformations2D.UnitTests
 			ITransformation2DType transformation2D = MakeScalingTransformationType();
 
 			Assert.AreEqual("Коэффициент X, Коэффициент Y", transformation2D.ParameterNames);
+		}
+
+		[Test]
+		public void GetTransformation_ArrayWithTwoParameters_ReturnScalingTransformation2D()
+		{
+			ITransformation2DType transformation2DType = MakeScalingTransformationType();
+
+			Assert.IsInstanceOf<ScalingTransformation2D>(transformation2DType.GetTransformation(new[] { 1.0, 1,0 }));
 		}
 	}
 }

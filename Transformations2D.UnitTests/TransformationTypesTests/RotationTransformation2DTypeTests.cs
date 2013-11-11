@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Transformations2D.Transformations;
 using Transformations2D.TransformationTypes;
 
-namespace Transformations2D.UnitTests
+namespace Transformations2D.UnitTests.TransformationTypesTests
 {
 	[TestFixture]
 	public class RotationTransformation2DTypeTests
@@ -46,6 +42,14 @@ namespace Transformations2D.UnitTests
 			ITransformation2DType transformation2D = MakeRotationTransformationType();
 
 			Assert.AreEqual("Угол", transformation2D.ParameterNames);
+		}
+
+		[Test]
+		public void GetTransformation_ArrayWithOneParameter_ReturnRotationTransformation2D()
+		{
+			ITransformation2DType transformation2DType = MakeRotationTransformationType();
+
+			Assert.IsInstanceOf<RotationTransformation2D>(transformation2DType.GetTransformation(new[]{1.0}));
 		}
 	}
 }

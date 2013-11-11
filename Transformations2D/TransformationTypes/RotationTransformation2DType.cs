@@ -1,4 +1,6 @@
-﻿namespace Transformations2D.TransformationTypes
+﻿using Transformations2D.Transformations;
+
+namespace Transformations2D.TransformationTypes
 {
 	public class RotationTransformation2DType : ITransformation2DType
 	{
@@ -15,6 +17,11 @@
 		public string ParameterNames
 		{
 			get { return "Угол"; }
+		}
+
+		public ITransformation2D GetTransformation(double[] parameters)
+		{
+			return new RotationTransformation2D(parameters[0]);
 		}
 	}
 }
