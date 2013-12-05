@@ -47,6 +47,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TransformationsTests\RotationTransformationTests.cs" />
+    <Compile Include="TransformationsTests\ScalingTransformationTests.cs" />
+    <Compile Include="TransformationsTests\TranslationTransformationTests.cs" />
+    <Compile Include="TransformationsTests\XReflectionTransformationTests.cs" />
+    <Compile Include="TransformationsTests\YReflectionTransformationTests.cs" />
     <Compile Include="TransformationTypesTests\ScalingTransformation2DTypeTests.cs" />
     <Compile Include="Transform2DServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

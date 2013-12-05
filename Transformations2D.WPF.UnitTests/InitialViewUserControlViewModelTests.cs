@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -8,7 +7,6 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Moq;
 using NUnit.Framework;
-using Transformations2D.TestsUtility;
 using Transformations2D.WPF.Controls;
 using Transformations2D.WPF.Helpers;
 using Transformations2D.WPF.Utility;
@@ -96,7 +94,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsEmpty(viewModel.ListOfPoints);
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void DeleteAllPointsCommand_InitialViewItemsContains2Points_ClearInitialViewItems()
 		{
 			InitialViewUserControlViewModel viewModel = MakeInitialViewUserControlViewModel();
@@ -174,7 +172,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsEmpty(viewModel.ListOfPoints);
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void AddPointCommand_ListOfPointsContains1Point_AddCorrectPathToInitialViewItems()
 		{
 			Mock<IUserInputParser> fakeParser = MakeFakeIUserInputParser(parseTo: new Point(0, 0));

@@ -21,7 +21,7 @@ namespace Transformations2D.TransformationTypes
 
 		public ITransformation2D GetTransformation(double[] parameters)
 		{
-			return new RotationTransformation2D(parameters[0]);
+			return new RotationTransformation2D(Name, parameters[0]);
 		}
 	}
 }

@@ -79,7 +79,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsTrue(result.SequenceEqual(new List<Point>{Point.Parse(expectedPoint1), Point.Parse(expectedPoint2)}));
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void MakePath_ListOfPoints_ReturnPath()
 		{
 			GeometryHelperService geometryHelper = MakeGeometryHelperService();
@@ -89,7 +89,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsAssignableFrom<Path>(result);
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void MakePath_ListOfPoints_ReturnPathWithGeometryGroup()
 		{
 			GeometryHelperService geometryHelper = MakeGeometryHelperService();
@@ -99,7 +99,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsAssignableFrom<GeometryGroup>(result.Data);
 		}
 
-		[TestCase(1, 1)]
+		[TestCase(1, 1), RequiresSTA]
 		[TestCase(2, 2)]
 		public void MakePath_ListOfPoints_ReturnPathWithSameNumberOfEllipseGeometry(int pointsNum, int expected)
 		{
@@ -110,7 +110,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.AreEqual(expected, GetGeometries(result).Count(g => g is EllipseGeometry));
 		}
 
-		[TestCase("175,175", "175,175")]
+		[TestCase("175,175", "175,175"), RequiresSTA]
 		[TestCase("50,50", "50,50")]
 		public void MakePath_OnePoint_ReturnEllipseGeometryWithPointsCoordinates(string point, string expected)
 		{
@@ -122,7 +122,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.AreEqual(Point.Parse(expected), ((EllipseGeometry)GetGeometries(result)[0]).Center);
 		}
 
-		[TestCase("175,175", "175,175")]
+		[TestCase("175,175", "175,175"), RequiresSTA]
 		[TestCase("1,1", "1,1")]
 		public void MakePath_TwoPoints_ReturnLineGeometryWithBeginningAtFirstPoint(string firstPoint, string expected)
 		{
@@ -134,7 +134,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.AreEqual(Point.Parse(expected), ((LineGeometry)GetGeometries(result).First(g => g is LineGeometry)).StartPoint);
 		}
 
-		[TestCase("175,175", "175,175")]
+		[TestCase("175,175", "175,175"), RequiresSTA]
 		[TestCase("1,1", "1,1")]
 		public void MakePath_TwoPoints_ReturnLineGeometryWithEndAtSecondPoint(string secondPoint, string expected)
 		{
@@ -146,7 +146,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.AreEqual(Point.Parse(expected), ((LineGeometry)GetGeometries(result).First(g => g is LineGeometry)).EndPoint);
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void MakePath_OnePoint_DoNotAddLineGeometry()
 		{
 			GeometryHelperService geometryHelper = MakeGeometryHelperService();
@@ -156,7 +156,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsFalse(GetGeometries(result).Any(g => g is LineGeometry));
 		}
 
-		[TestCase("2,2","3,3","2,2","3,3")]
+		[TestCase("2,2", "3,3", "2,2", "3,3"), RequiresSTA]
 		[TestCase("4,4","5,5","4,4","5,5")]
 		public void MakePath_ThreePoints_AddLineBetweenSecondAndThirdPoints(string point2, string point3, string expectedStart, string expectedEnd)
 		{
@@ -168,7 +168,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsTrue(GetGeometries(result).Any(g => GeometryIsLineBetweenPoints(g, Point.Parse(expectedStart), Point.Parse(expectedEnd))));
 		}
 
-		[TestCase("1,1", "3,3", "3,3", "1,1")]
+		[TestCase("1,1", "3,3", "3,3", "1,1"), RequiresSTA]
 		[TestCase("4,4", "5,5", "5,5", "4,4")]
 		public void MakePath_ThreePoints_AddLineBetweenThirdAndFirstPoints(string point1, string point3, string expectedStart, string expectedEnd)
 		{
@@ -180,7 +180,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsTrue(GetGeometries(result).Any(g => GeometryIsLineBetweenPoints(g, Point.Parse(expectedStart), Point.Parse(expectedEnd))));
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void MakePath_TwoPoints_AddOnlyOneLine()
 		{
 			GeometryHelperService geometryHelper = MakeGeometryHelperService();
@@ -191,7 +191,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.AreEqual(1, GetGeometries(result).Count(g => g is LineGeometry));
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void MakePath_FourPoints_NoLineBetweenThirdAndFirstPoints()
 		{
 			GeometryHelperService geometryHelper = MakeGeometryHelperService();
@@ -202,7 +202,7 @@ namespace Transformations2D.WPF.UnitTests
 			Assert.IsFalse(GetGeometries(result).Any(g => GeometryIsLineBetweenPoints(g, new Point(3,3), new Point(1,1))));
 		}
 
-		[Test]
+		[Test, RequiresSTA]
 		public void MakePath_FourPoints_AddLineBetweenFourthAndFirstPoints()
 		{
 			GeometryHelperService geometryHelper = MakeGeometryHelperService();

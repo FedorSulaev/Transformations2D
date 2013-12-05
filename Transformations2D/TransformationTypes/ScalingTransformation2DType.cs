@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Transformations2D.Transformations;
+﻿using Transformations2D.Transformations;
 
 namespace Transformations2D.TransformationTypes
 {
@@ -26,7 +21,7 @@ namespace Transformations2D.TransformationTypes
 
 		public ITransformation2D GetTransformation(double[] parameters)
 		{
-			return new ScalingTransformation2D(parameters[0], parameters[1]);
+			return new ScalingTransformation2D(Name, parameters[0], parameters[1]);
 		}
 	}
 }

@@ -67,7 +67,7 @@
                         Grid.Row="0"
                         BorderBrush="Black"
                         BorderThickness="1">
-                    <ItemsControl ItemsSource="{Binding TransformedViewItems}"
+                    <ItemsControl ItemsSource="{Binding TransformViewItems}"
                                   Width="350"
                                   Height="350">
                         <ItemsControl.Template>
@@ -104,12 +104,15 @@
                                Text="Тип преобразования: "/>
 
                     <ComboBox Grid.Column="1"
-                              Grid.Row="0"/>
+                              Grid.Row="0"
+                              ItemsSource="{Binding TransformationTypes}"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding SelectedTransformationType}"/>
 
-                    <!-- Temp /!-->
                     <TextBlock Grid.Column="0"
                                Grid.Row="1"
-                               Text="Параметры: "/>
+                               Grid.ColumnSpan="2"
+                               Text="{Binding ParameterNames}"/>
 
                 </Grid>
 
@@ -119,10 +122,12 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0"/>
+                    <TextBox Grid.Column="0"
+                             Text="{Binding Parameters, Mode=TwoWay}"/>
 
                     <Button Grid.Column="1"
-                            Content="Добавить преобразование" />
+                            Content="Добавить преобразование"
+                            Command="{Binding AddTransformationCommand}"/>
 
                 </Grid>
 
@@ -133,12 +138,17 @@
                     </Grid.ColumnDefinitions>
 
                     <ListBox Grid.Row="0"
-                             Grid.Column="0" />
+                             Grid.Column="0" 
+                             ItemsSource="{Binding Transformations}"
+                             DisplayMemberPath="Description"
+                             SelectedItem="{Binding SelectedTransformation}"/>
 
                     <StackPanel Grid.Row="0"
                                 Grid.Column="1">
-                        <Button Content="Удалить преобразование" />
-                        <Button Content="Удалить все" />
+                        <Button Content="Удалить преобразование"
+                                Command="{Binding DeleteTransformationCommand}"/>
+                        <Button Content="Удалить все" 
+                                Command="{Binding DeleteAllTransformationsCommand}"/>
                     </StackPanel>
 
                 </Grid>

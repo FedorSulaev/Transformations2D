@@ -4,8 +4,8 @@
         xmlns:controls="clr-namespace:Transformations2D.WPF.Controls"
         DataContext="{StaticResource MainWindowViewModel}"
         Title="MainWindow"
-        Height="700"
-        Width="790">
+        Height="620"
+        SizeToContent="Width">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin"
@@ -29,8 +29,9 @@
         </Style>
     </Window.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Auto">
-        <Grid>
+                  HorizontalScrollBarVisibility="Auto"
+                  Width="Auto">
+        <Grid Width="Auto">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />

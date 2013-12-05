@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Transformations2D.Transformations
 {
 	public class ScalingTransformation2D : ITransformation2D
 	{
-		public ScalingTransformation2D(double xFactor, double yFactor)
+		public string Description { get; private set; }
+		public DenseMatrix Matrix { get; private set; }
+
+		public ScalingTransformation2D(string name, double xFactor, double yFactor)
 		{
-			
+			CultureInfo culture = CultureInfo.GetCultureInfo("en");
+			Description = name + "(" + xFactor.ToString(culture) + ", " + yFactor.ToString(culture) + ")";
+			Matrix = Transform2DService.MakeScalingMatrix(xFactor, yFactor);
 		}
 	}
 }

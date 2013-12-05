@@ -26,7 +26,7 @@ namespace Transformations2D.TransformationTypes
 
 		public ITransformation2D GetTransformation(double[] parameters)
 		{
-			return new YReflectionTransformation2D();
+			return new YReflectionTransformation2D(Name);
 		}
 	}
 }

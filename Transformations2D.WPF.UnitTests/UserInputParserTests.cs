@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
+using System.Linq;
 using System.Windows;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using Transformations2D.WPF.Helpers;
 
 namespace Transformations2D.WPF.UnitTests
@@ -42,6 +44,42 @@ namespace Transformations2D.WPF.UnitTests
 			Point? result = parser.StringToPoint("12");
 
 			Assert.AreEqual(null, result);
+		}
+
+		[TestCase("0", 0d)]
+		[TestCase("1", 1d)]
+		public void StringToTransformParameters_ValidStringWithOneParameter_ReturnOneParsedParameterInArray(string input, double expected)
+		{
+			IUserInputParser parser = GetIUserInputParser();
+
+			double[] result = parser.StringToTransformParameters(input);
+
+			Assert.AreEqual(1, result.Count());
+			Assert.Contains(expected, result);
+		}
+
+		[TestCase("0, 1", 0d, 1d)]
+		[TestCase("1 2", 1d, 2d)]
+		public void StringToTransformParameters_ValidStringWithTwoParameters_ReturnTwoParsedParametersInArray(string input, double firstExpected,
+			double secondExpected)
+		{
+			IUserInputParser parser = GetIUserInputParser();
+
+			double[] result = parser.StringToTransformParameters(input);
+
+			Assert.AreEqual(2, result.Count());
+			Assert.Contains(firstExpected, result);
+			Assert.Contains(secondExpected, result);
+		}
+
+		[Test]
+		public void StringToTransformParameters_InvalidString_ReturnEmptyArray()
+		{
+			IUserInputParser parser = GetIUserInputParser();
+
+			double[] result = parser.StringToTransformParameters("abc");
+
+			Assert.IsEmpty(result);
 		}
 	}
 }
